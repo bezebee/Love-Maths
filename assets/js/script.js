@@ -16,6 +16,12 @@ document.addEventListener("DOMContentLoaded", function(){
         })
     }
 
+    document.getElementById("answer-box").addEventListener("keydown", function(event){
+        if(event.key === "Enter"){
+            checkAnswer();
+        }
+    })
+
     runGame("addition");
 })
 
@@ -23,24 +29,31 @@ document.addEventListener("DOMContentLoaded", function(){
  * The main game loop, called when the scrupt is first loaded
  * and after the users answer has been processed
  */
-function runGame(gameType){
+ function runGame(gameType) {
 
-    //Creates two random numbers between 1 and 25
-    let num1 = Math.floor(Math.random() *25)+1;
-    let num2 = Math.floor(Math.random() *25)+1;
+	// Generate two random numbers between 1 and 25
+	// Math.floor rounds down to the whole number
+	// Math.random generates random numbers
 
-    if (gameType === "addition") {
-        displayAdditionQuestion(num1, num2);
-    }else if (gameType === "subtract"){
-        displaySubtractQuestion(num1, num2);
-    }else if (gameType === "multiply"){
-        displayMultiplyQuestion(num1, num2);
-    }else if (gameType === "divide"){
-        displayDivideQuestion(num1, num2);
-    }else{
-        alert(`Unknown game type:${gameType}`);
-        throw `Unknown game type: ${gameType}. Aborting!`
-    }
+	document.getElementById("answer-box").value = "";
+	document.getElementById("answer-box").focus();
+
+	let num1 = Math.floor(Math.random() * 25) + 1;
+	let num2 = Math.floor(Math.random() * 25) + 1;
+
+	if (gameType === "addition") {
+		displayAdditionQuestion(num1, num2);
+	} else if (gameType === "multiply") {
+		displayMultiplyQuestion(num1, num2);
+	} else if (gameType === "subtract") {
+		displaySubtractQuestion(num1, num2);
+	} else if (gameType === "divide") {
+        displayDivisionQuestion(num1, num2);
+    } else {
+		alert(`Unknown game type ${gameType}`);
+		throw `Unknown game type ${gameType}, aborting!`;
+	}
+
 }
 
 /**
@@ -68,24 +81,27 @@ function checkAnswer(){
  * Gets the operands (the numbers) and the operator (plus, minuts,etc)
  * directly from the dom, and returns the correct answer.
  */
-function calculateCorrectAnswer(){
-    let operand1 = parseInt(document.getElementById('operand1').innerText);
-    let operand2 = parseInt(document.getElementById('operand2').innerText);
-    let operator = document.getElementById('operator').innerText;
+ function calculateCorrectAnswer() {
 
-    if (operator === "+"){
-        return [operand1 + operand2, "addition"];
-    }else if(operator === "-"){
-        return [operand1 - operand2, "subtract"];
-    }else if(operator === "X"){
-        return [operand1 * operand2, "multiply"];
-    }else if(operator === "/"){
+	// Gets the operands (the numbers) and the operator (plus, minus etc)
+	// directly from the DOM
+    console.log('In here')
+	let operand1 = parseInt(document.getElementById("operand1").textContent);
+	let operand2 = parseInt(document.getElementById("operand2").textContent);
+	let operator = document.getElementById("operator").textContent;
+    console.log('*****', operator, operand1, operand2)
+	if (operator === "+") {
+		return [operand1 + operand2, "addition"];
+	} else if (operator === "x") {
+		return [operand1 * operand2, "multiply"];
+	} else if (operator ==="-") {
+		return [operand1 - operand2, "subtract"];
+	} else if (operator === "/") { 
         return [operand1 / operand2, "divide"];
-    }else{
-        alert(`Unimplemented operator ${operator}`);
-        throw `Unimplemented operator ${operator}. Aborting`;
-    }
-
+    } else {
+		alert(`Unimplemented operator ${operator}`);
+		throw `Unimplemented operator ${operator}, aborting!`;
+	}
 }
 
 /**
@@ -126,8 +142,10 @@ function displayMultiplyQuestion(operand1, operand2){
     document.getElementById('operator').textContent = "X";
 }
 
-function displayDivideQuestion(operand1, operand2){
-    document.getElementById('operand1').textContent = operand1 > operand2 ? operand1 : operand2;
-    document.getElementById('operand2').textContent = operand1 > operand2 ? operand2 : operand1;
-    document.getElementById('operator').textContent = "/";
+function displayDivisionQuestion(operand1, operand2) {
+    operand1 = operand1 * operand2;
+    
+    document.getElementById("operand1").textContent = operand1;
+    document.getElementById("operand2").textContent = operand2;
+    document.getElementById("operator").textContent = "/";
 }
